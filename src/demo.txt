@@ -1,0 +1,636 @@
+ ================================ jsx file ================================
+
+ import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setRecipeField,
+  addIngredientsField,
+  submitRecipe,
+} from "../store/slice/recipeSlice";
+
+function Recipe() {
+  const [ingredients, setIngredients] = useState([]);
+  console.log("ingredients :", ingredients);
+  // for adding empty ingredient input
+  const addIngredient = () => {
+    setIngredients([
+      ...ingredients,
+      { quantity: "", unit: "", name: "", extraNote: "" },
+    ]);
+  };
+
+  const dispatch = useDispatch();
+  const recipeState = useSelector((state) => state.recipe);
+
+  const updateField = (field, value) => {
+    dispatch(setRecipeField({ field, value }));
+  };
+
+  const addNewIngredient = () => {
+    dispatch(
+      addIngredientsField({ quantity: "", unit: "", name: "", extraNote: "" })
+    );
+  };
+
+  const onHandleSubmit = () => {
+    dispatch(addIngredientsField(ingredients));
+
+    dispatch(submitRecipe(recipeState));
+    console.log("recipe details : ", recipeState);
+  };
+
+  return (
+    <>
+      <center>
+        <h1 className="heading my-3">Recipe Details</h1>
+      </center>
+      <form className="mx-auto">
+        <br />
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Recipe Name :</label>
+          <div className="col-sm-10">
+            <input
+              type="text"
+              className="form-control"
+              id="recipeName"
+              value={recipeState.recipeName}
+              onChange={(e) => updateField("recipeName", e.target.value)}
+            />
+          </div>
+        </div>
+        <br />
+
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Slug :</label>
+          <div className="col-sm-10">
+            <input
+              type="text"
+              className="form-control"
+              id="slug"
+              value={recipeState.slug}
+              onChange={(e) => updateField("slug", e.target.value)}
+            />
+          </div>
+        </div>
+        <br />
+
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Image :</label>
+          <div className="col-sm-10">
+            <input
+              type="file"
+              className="form-control"
+              id="recipeImage"
+              value={recipeState.image}
+              onChange={(e) => updateField("image", e.target.value)}
+            />
+          </div>
+        </div>
+        <br />
+
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Description :</label>
+          <div className="col-sm-10">
+            <textarea
+              className="form-control"
+              id="recipeDescription"
+              rows="6"
+              value={recipeState.description}
+              onChange={(e) => updateField("description", e.target.value)}
+            ></textarea>
+          </div>
+        </div>
+        <br />
+
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Cooking Time :</label>
+          <div className="col-sm-10">
+            <input
+              type="text"
+              className="form-control"
+              id="cookingTime"
+              value={recipeState.cookingTime}
+              onChange={(e) => updateField("cookingTime", e.target.value)}
+            />
+          </div>
+        </div>
+        <br />
+
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Additional Note :</label>
+          <div className="col-sm-10">
+            <input
+              type="text"
+              className="form-control"
+              id="additionalNote"
+              value={recipeState.additionalNotes}
+              onChange={(e) => updateField("additionalNotes", e.target.value)}
+            />
+          </div>
+        </div>
+        <br />
+
+        <center>
+          <h1 className="heading">Add Ingredients</h1>
+        </center>
+        <br />
+        <div id="ingredients" className="container">
+          <div className="container mt-4">
+            <div className="row">
+              <div className="col">
+                <label className="sr-only">Quantity</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Quantity"
+                />
+              </div>
+              <div className="col">
+                <label className="sr-only">Unit</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Unit"
+                />
+              </div>
+              <div className="col">
+                <label className="sr-only">Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Name"
+                />
+              </div>
+              <div className="col">
+                <label className="sr-only">Extra Note</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Extra Note"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* ============================ */}
+
+        <br />
+        <div id="ingredients" className="container">
+          {ingredients.map((ingredient, index) => (
+            <div className="container mt-4" key={index}>
+              <div className="row">
+                <div className="col">
+                  <label className="sr-only">Quantity</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={ingredient.quantity}
+                    onChange={(e) => {
+                      const updatedIngredients = [...ingredients];
+                      updatedIngredients[index].quantity = e.target.value;
+                      setIngredients(updatedIngredients);
+                    }}
+                    placeholder="Quantity"
+                  />
+                </div>
+                <div className="col">
+                  <label className="sr-only">Unit</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={ingredient.unit}
+                    onChange={(e) => {
+                      const updatedIngredients = [...ingredients];
+                      updatedIngredients[index].unit = e.target.value;
+                      setIngredients(updatedIngredients);
+                    }}
+                    placeholder="Unit"
+                  />
+                </div>
+                <div className="col">
+                  <label className="sr-only">Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={ingredient.name}
+                    onChange={(e) => {
+                      const updatedIngredients = [...ingredients];
+                      updatedIngredients[index].name = e.target.value;
+                      setIngredients(updatedIngredients);
+                    }}
+                    placeholder="Name"
+                  />
+                </div>
+                <div className="col">
+                  <label className="sr-only">Extra Note</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={ingredient.extraNote}
+                    onChange={(e) => {
+                      const updatedIngredients = [...ingredients];
+                      updatedIngredients[index].extraNote = e.target.value;
+                      setIngredients(updatedIngredients);
+                    }}
+                    placeholder="Extra Note"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="my-3">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={addIngredient}
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <center>
+          <button
+            type="button"
+            className="btn btn-success"
+            onClick={onHandleSubmit}
+          >
+            Submit
+          </button>
+        </center>
+      </form>
+    </>
+  );
+}
+
+export default Recipe;
+
+
+=====================================   slice file ======================= 
+
+
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  recipeName: "",
+  slug: "",
+  image: "",
+  description: "",
+  cookingTime: "",
+  additionalNotes: "",
+  ingredient: [],
+};
+
+const recipeSlice = createSlice({
+  name: "recipe",
+  initialState,
+  reducers: {
+    setRecipeField: (state, action) => {
+      const { field, value } = action.payload;
+      state[field] = value;
+    },
+    addIngredientsField: (state, action) => {
+      console.log("new", action.payload);
+      state.ingredient.push(action.payload);
+    },
+    submitRecipe: (state, action) => {
+      //   state = action.payload;
+      //   return { ...state, ...action.payload };
+      return {
+        ...state,
+        ...action.payload,
+        ingredient: [...state.ingredient],
+      };
+    },
+  },
+});
+
+export const { setRecipeField, addIngredientsField, submitRecipe } =
+  recipeSlice.actions;
+
+export default recipeSlice.reducer;
+
+
+
+
+
+
+
+
+============================= latest =================================
+
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateField, addIngredient } from "../store/slice/recipeSlice";
+
+function YourComponent() {
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.recipe);
+
+  const recipeNameHandler = (e) => {
+    dispatch(updateField({ field: "recipeName", value: e.target.value }));
+  };
+
+  const handleIngredientChange = (index, field, value) => {
+    // Create a copy of the ingredients array to avoid mutating the state directly
+    const updatedIngredients = [...formData.ingredients];
+    updatedIngredients[index][field] = value;
+
+    // Dispatch an action to update the ingredients array in Redux state
+    dispatch(
+      updateField({
+        field: "ingredients",
+        value: updatedIngredients,
+      })
+    );
+  };
+
+  const addField = () => {
+    const newIngredient = {
+      quantity: "",
+      unit: "",
+      name: "",
+      extraNote: "",
+    };
+    dispatch(addIngredient(newIngredient)); // Dispatch the action with the newIngredient object
+  };
+
+  const handleIngredientFieldChange = (index, field, value) => {
+    const updatedIngredients = [...formData.ingredients];
+    updatedIngredients[index][field] = value;
+
+    dispatch(
+      updateField({
+        field: "ingredients",
+        value: updatedIngredients,
+      })
+    );
+  };
+
+  const handleSubmit = () => {
+    console.log("Form Data:", formData);
+  };
+
+  return (
+    <div>
+      <h1 className="heading">Recipe Details</h1>
+      <div className="form-group row">
+        <label htmlFor="colFormLabel" className="col-sm-2 col-form-label">
+          Recipe Name :
+        </label>
+        <div className="col-sm-10">
+          <input
+            type="text"
+            className="form-control"
+            id="recipeName"
+            onChange={recipeNameHandler}
+          />
+        </div>
+      </div>
+      <div className="form-group row">
+        <label htmlFor="colFormLabel" className="col-sm-2 col-form-label">
+          Slug :
+        </label>
+        <div className="col-sm-10">{formData.recipeSlug}</div>
+      </div>
+      <div className="form-group row">
+        <label htmlFor="colFormLabel" className="col-sm-2 col-form-label">
+          Image :
+        </label>
+        <div className="col-sm-10">
+          <input
+            type="file"
+            className="form-control"
+            id="recipeImage"
+            onChange={(e) =>
+              dispatch(
+                updateField({ field: "recipeImage", value: e.target.value })
+              )
+            }
+          />
+        </div>
+      </div>
+      <div className="form-group row">
+        <label htmlFor="colFormLabel" className="col-sm-2 col-form-label">
+          Description :
+        </label>
+        <div className="col-sm-10">
+          <textarea
+            className="form-control"
+            id="recipeDescription"
+            rows="6"
+            onChange={(e) =>
+              dispatch(
+                updateField({
+                  field: "recipeDescription",
+                  value: e.target.value,
+                })
+              )
+            }
+          ></textarea>
+        </div>
+      </div>
+      <div className="form-group row">
+        <label htmlFor="colFormLabel" className="col-sm-2 col-form-label">
+          Cooking Time :
+        </label>
+        <div className="col-sm-10">
+          <input
+            type="text"
+            className="form-control"
+            id="cookingTime"
+            onChange={(e) =>
+              dispatch(
+                updateField({ field: "cookingTime", value: e.target.value })
+              )
+            }
+          />
+        </div>
+      </div>
+      <div className="form-group row">
+        <label htmlFor="colFormLabel" className="col-sm-2 col-form-label">
+          Additional Note :
+        </label>
+        <div className="col-sm-10">
+          <input
+            type="text"
+            className="form-control"
+            id="additionalNote"
+            onChange={(e) =>
+              dispatch(
+                updateField({
+                  field: "additionalNote",
+                  value: e.target.value,
+                })
+              )
+            }
+          />
+        </div>
+      </div>
+
+      <h1 className="heading">Add Ingredients</h1>
+      {/* <div className="container mt-4">
+        <div className="row">
+          <div className="col">
+            <label htmlFor="quantity" className="sr-only">
+              Quantity
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              id="quantity"
+              placeholder="Quantity"
+              value={
+                formData.ingredients[formData.ingredients.length - 1].quantity
+              }
+              onChange={(e) =>
+                handleIngredientFieldChange("quantity", e.target.value)
+              }
+            />
+          </div>
+          <div className="col">
+            <label htmlFor="unit" className="sr-only">
+              Unit
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="unit"
+              placeholder="Unit"
+              value={formData.ingredients[formData.ingredients.length - 1].unit}
+              onChange={(e) =>
+                handleIngredientFieldChange("unit", e.target.value)
+              }
+            />
+          </div>
+          <div className="col">
+            <label htmlFor="name" className="sr-only">
+              Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="name"
+              placeholder="Name"
+              value={formData.ingredients[formData.ingredients.length - 1].name}
+              onChange={(e) =>
+                handleIngredientFieldChange("name", e.target.value)
+              }
+            />
+          </div>
+          <div className="col">
+            <label htmlFor="extraNote" className="sr-only">
+              Extra Note
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="extraNote"
+              placeholder="Extra Note"
+              value={
+                formData.ingredients[formData.ingredients.length - 1].extraNote
+              }
+              onChange={(e) =>
+                handleIngredientFieldChange("extraNote", e.target.value)
+              }
+            />
+          </div>
+          <div className="col my-4">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={addField}
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </div> */}
+
+      {formData.ingredients.map((ingredient, index) => (
+        <div key={index} className="container mt-4">
+          <div className="row">
+            <div className="col">
+              <label htmlFor={`quantity-${index}`} className="sr-only">
+                Quantity
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id={`quantity-${index}`}
+                placeholder="Quantity"
+                value={ingredient.quantity}
+                onChange={(e) =>
+                  handleIngredientChange(index, "quantity", e.target.value)
+                }
+              />
+            </div>
+            <div className="col">
+              <label htmlFor={`unit-${index}`} className="sr-only">
+                Unit
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id={`unit-${index}`}
+                placeholder="Unit"
+                value={ingredient.unit}
+                onChange={(e) =>
+                  handleIngredientChange(index, "unit", e.target.value)
+                }
+              />
+            </div>
+            <div className="col">
+              <label htmlFor={`name-${index}`} className="sr-only">
+                Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id={`name-${index}`}
+                placeholder="Name"
+                value={ingredient.name}
+                onChange={(e) =>
+                  handleIngredientChange(index, "name", e.target.value)
+                }
+              />
+            </div>
+            <div className="col">
+              <label htmlFor={`extraNote-${index}`} className="sr-only">
+                Extra Note
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id={`extraNote-${index}`}
+                placeholder="Extra Note"
+                value={ingredient.extraNote}
+                onChange={(e) =>
+                  handleIngredientChange(index, "extraNote", e.target.value)
+                }
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <div className="col my-4 ">
+        <button type="submit" className="btn btn-primary" onClick={addField}>
+          +
+        </button>
+      </div>
+
+      <center>
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
+      </center>
+    </div>
+  );
+}
+
+export default YourComponent;
